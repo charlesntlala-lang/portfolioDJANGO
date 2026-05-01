@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Blog - {{ site.site_name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <div>
+            <div class="section-badge"><i class="fas fa-newspaper"></i> Blog</div>
+            <h1 class="section-title">Our Blog</h1>
+        </div>
+        {% if user.is_staff %}
+        <a href="{% url 'blog_create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> New Post</a>
+        {% endif %}
+    </div>
+    {% if user.is_staff %}
+    <div class="search-bar">
+        <form method="get" class="search-form">
+            <input type="text" name="q" placeholder="Search blogs..." value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+        </form>
+    </div>
+    {% if categories %}
+    <div class="filters">
+        <a href="{% url 'blog_list' %}" class="filter-btn {% if not request.GET.category %}active{% endif %}">All</a>
+        {% for cat in categories %}
+        <a href="?category={{ cat.slug }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="filter-btn {% if request.GET.category == cat.slug %}active{% endif %}">{{ cat.name }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endif %}
+    <div class="grid">
+        {% for post in posts %}
+        <a href="{% url 'blog_detail' post.slug %}" class="card card-blog clickable-card fade-in-up">
+            <div class="card-image">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                {% endif %}
+                {% if post.video_url %}
+                <div class="video-badge"><i class="fas fa-play-circle"></i></div>
+                {% endif %}
+                <div class="card-overlay">
+                    <span class="overlay-text"><i class="fas fa-book-open"></i> Read More</span>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if post.category %}
+                <span class="badge"><i class="fas fa-tag"></i> {{ post.category.name }}</span>
+                {% endif %}
+                <h3>{{ post.title }}</h3>
+                <p class="date"><i class="fas fa-calendar"></i> {{ post.created_at|date:"M d, Y" }}</p>
+                <p class="excerpt">{{ post.content|truncatewords:15 }}</p>
+                <div class="card-meta">
+                    <span><i class="fas fa-eye"></i> {{ post.views }}</span>
+                    <span><i class="fas fa-heart"></i> {{ post.total_likes }}</span>
+                    {% if post.shares %}
+                    <span><i class="fas fa-share"></i> {{ post.shares }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-pencil-alt"></i></div>
+            <h3>No blog posts found</h3>
+            <p>Check back later for new content!</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% include 'blog/pagination.html' with page_obj=posts %}
+</section>
+{% endblock %}

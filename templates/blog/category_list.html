@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Categories{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <div>
+            <div class="section-badge">Admin</div>
+            <h1 class="section-title">Manage Categories</h1>
+        </div>
+        <a href="{% url 'category_create' %}" class="btn btn-primary">New Category</a>
+    </div>
+    <div class="table-container fade-in">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Blog Posts</th>
+                    <th>Portfolio Items</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                <tr>
+                    <td><strong>{{ category.name }}</strong></td>
+                    <td>{{ category.blog_count }}</td>
+                    <td>{{ category.portfolio_count }}</td>
+                    <td class="actions-cell">
+                        <a href="{% url 'category_update' category.slug %}" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="{% url 'category_delete' category.slug %}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="empty-row">No categories yet. Create your first one!</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

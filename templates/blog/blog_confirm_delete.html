@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Blog Post{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="delete-card fade-in">
+        <div class="delete-icon">⚠️</div>
+        <h1>Delete Blog Post</h1>
+        <p>Are you sure you want to delete <strong>"{{ post.title }}"</strong>?</p>
+        <p class="delete-warning">This action cannot be undone.</p>
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            <a href="{% url 'blog_detail' post.slug %}" class="btn btn-outline">Cancel</a>
+        </form>
+    </div>
+</section>
+{% endblock %}

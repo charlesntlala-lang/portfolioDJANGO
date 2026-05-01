@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Profile{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <div>
+            <div class="section-badge">Admin</div>
+            <h1 class="section-title">Manage Profile</h1>
+        </div>
+    </div>
+    <div class="form-card fade-in">
+        <form method="post" enctype="multipart/form-data" class="form">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                <small class="help-text">{{ field.help_text }}</small>
+                {% endif %}
+                {% if field.errors %}
+                <div class="errors">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Update Profile</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

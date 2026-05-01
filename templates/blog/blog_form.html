@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Blog Post{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <div>
+            <div class="section-badge">Blog</div>
+            <h1 class="section-title">{{ action }} Blog Post</h1>
+        </div>
+    </div>
+    <div class="form-card fade-in">
+        <form method="post" enctype="multipart/form-data" class="form">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <div class="errors">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ action }} Post</button>
+                <a href="javascript:history.back()" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

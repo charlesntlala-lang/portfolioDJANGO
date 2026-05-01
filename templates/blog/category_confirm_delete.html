@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Category{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="delete-card fade-in">
+        <div class="delete-icon">⚠️</div>
+        <h1>Delete Category</h1>
+        <p>Are you sure you want to delete <strong>"{{ category.name }}"</strong>?</p>
+        <p class="delete-warning">Posts and portfolio items in this category will become uncategorized.</p>
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            <a href="{% url 'category_list' %}" class="btn btn-outline">Cancel</a>
+        </form>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% if page_obj.has_other_pages %}
+<div class="pagination fade-in">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="page-link">
+        <span class="arrow">←</span> Previous
+    </a>
+    {% endif %}
+    <div class="page-numbers">
+        {% for num in page_obj.paginator.page_range %}
+        <a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="page-number {% if num == page_obj.number %}active{% endif %}">{{ num }}</a>
+        {% endfor %}
+    </div>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}" class="page-link">
+        Next <span class="arrow">→</span>
+    </a>
+    {% endif %}
+</div>
+{% endif %}

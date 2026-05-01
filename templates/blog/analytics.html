@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics Dashboard - {{ site.site_name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <div>
+            <div class="section-badge"><i class="fas fa-chart-bar"></i> Admin</div>
+            <h1 class="section-title">Analytics Dashboard</h1>
+        </div>
+    </div>
+    <div class="stats-grid fade-in">
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-primary"><i class="fas fa-newspaper"></i></div>
+            <h3 class="stat-number">{{ total_posts }}</h3>
+            <p class="stat-label">Blog Posts</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-secondary"><i class="fas fa-images"></i></div>
+            <h3 class="stat-number">{{ total_portfolio }}</h3>
+            <p class="stat-label">Projects</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-success"><i class="fas fa-eye"></i></div>
+            <h3 class="stat-number">{{ total_views }}</h3>
+            <p class="stat-label">Total Views</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-danger"><i class="fas fa-heart"></i></div>
+            <h3 class="stat-number">{{ total_likes }}</h3>
+            <p class="stat-label">Total Likes</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-info"><i class="fas fa-share-alt"></i></div>
+            <h3 class="stat-number">{{ total_shares }}</h3>
+            <p class="stat-label">Total Shares</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-warning"><i class="fas fa-user-tie"></i></div>
+            <h3 class="stat-number">{{ total_leads }}</h3>
+            <p class="stat-label">Leads Captured</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-success"><i class="fas fa-envelope"></i></div>
+            <h3 class="stat-number">{{ total_subscribers }}</h3>
+            <p class="stat-label">Subscribers</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-info"><i class="fas fa-comments"></i></div>
+            <h3 class="stat-number">{{ pending_comments }}</h3>
+            <p class="stat-label">Pending Comments</p>
+        </div>
+    </div>
+    <div class="dashboard-grid">
+        <div class="dashboard-card fade-in">
+            <div class="card-header"><h2><i class="fas fa-fire"></i> Most Viewed Blog Posts</h2></div>
+            <ul class="list-items clickable-list">
+                {% for post in popular_posts %}
+                <li>
+                    <a href="{% url 'blog_detail' post.slug %}"><span>{{ post.title }}</span></a>
+                    <span class="stat-badge">{{ post.views }} views</span>
+                </li>
+                {% empty %}
+                <li class="empty-list">No posts yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="dashboard-card fade-in">
+            <div class="card-header"><h2><i class="fas fa-fire"></i> Most Viewed Projects</h2></div>
+            <ul class="list-items clickable-list">
+                {% for item in popular_portfolio %}
+                <li>
+                    <a href="{% url 'portfolio_detail' item.slug %}"><span>{{ item.title }}</span></a>
+                    <span class="stat-badge">{{ item.views }} views</span>
+                </li>
+                {% empty %}
+                <li class="empty-list">No projects yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="dashboard-card fade-in">
+            <div class="card-header"><h2><i class="fas fa-user-tie"></i> Recent Leads</h2></div>
+            <ul class="list-items">
+                {% for lead in recent_leads %}
+                <li>
+                    <span>{{ lead.name }} - {{ lead.service }}</span>
+                    <span class="stat-badge {% if lead.is_contacted %}status-approved{% else %}status-pending{% endif %}">{{ lead.email }}</span>
+                </li>
+                {% empty %}
+                <li class="empty-list">No leads yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="dashboard-card fade-in">
+            <div class="card-header"><h2><i class="fas fa-tags"></i> Top Categories</h2></div>
+            <ul class="list-items">
+                {% for cat in top_categories %}
+                <li>
+                    <span>{{ cat.name }}</span>
+                    <span class="stat-badge">{{ cat.blog_count }} blogs, {{ cat.portfolio_count }} projects</span>
+                </li>
+                {% empty %}
+                <li class="empty-list">No categories yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>
+{% endblock %}

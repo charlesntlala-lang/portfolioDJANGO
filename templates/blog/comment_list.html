@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Comments{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <div>
+            <div class="section-badge">Admin</div>
+            <h1 class="section-title">Manage Comments ({{ comments.paginator.count }})</h1>
+        </div>
+    </div>
+    <div class="table-container fade-in">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Blog Post</th>
+                    <th>Content</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comment in comments %}
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar">{{ comment.name|slice:":1"|upper }}</div>
+                            <div>
+                                <strong>{{ comment.name }}</strong>
+                                <small>{{ comment.email }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td><a href="{% url 'blog_detail' comment.blog_post.slug %}">{{ comment.blog_post.title }}</a></td>
+                    <td class="truncate">{{ comment.content }}</td>
+                    <td>
+                        {% if comment.is_approved %}
+                        <span class="status-badge status-approved">Approved</span>
+                        {% else %}
+                        <span class="status-badge status-pending">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ comment.created_at|date:"M d, Y" }}</td>
+                    <td class="actions-cell">
+                        {% if not comment.is_approved %}
+                        <a href="{% url 'comment_approve' comment.pk %}" class="btn btn-success btn-sm">Approve</a>
+                        {% endif %}
+                        <a href="{% url 'comment_delete' comment.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="empty-row">No comments yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'blog/pagination.html' with page_obj=comments %}
+</section>
+{% endblock %}

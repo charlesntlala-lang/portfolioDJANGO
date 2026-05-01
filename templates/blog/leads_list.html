@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Leads - {{ site.site_name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <div>
+            <div class="section-badge"><i class="fas fa-user-tie"></i> Admin</div>
+            <h1 class="section-title">Leads ({{ leads.paginator.count }})</h1>
+        </div>
+    </div>
+    <div class="table-container fade-in">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Service</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lead in leads %}
+                <tr>
+                    <td><strong>{{ lead.name }}</strong></td>
+                    <td>
+                        <div><i class="fas fa-envelope"></i> {{ lead.email }}</div>
+                        {% if lead.phone %}
+                        <div><i class="fas fa-phone"></i> {{ lead.phone }}</div>
+                        {% endif %}
+                    </td>
+                    <td>{{ lead.service|default:"-" }}</td>
+                    <td class="truncate">{{ lead.message }}</td>
+                    <td>
+                        {% if lead.is_contacted %}
+                        <span class="status-badge status-approved"><i class="fas fa-check"></i> Contacted</span>
+                        {% else %}
+                        <span class="status-badge status-pending"><i class="fas fa-clock"></i> New</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ lead.created_at|date:"M d, Y" }}</td>
+                    <td class="actions-cell">
+                        {% if not lead.is_contacted %}
+                        <a href="{% url 'lead_mark_contacted' lead.pk %}" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Mark</a>
+                        {% endif %}
+                        <a href="mailto:{{ lead.email }}" class="btn btn-primary btn-sm"><i class="fas fa-envelope"></i></a>
+                        <form method="post" action="{% url 'lead_delete' lead.pk %}" style="display:inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="empty-row">No leads captured yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include 'blog/pagination.html' with page_obj=leads %}
+</section>
+{% endblock %}

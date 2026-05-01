@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Portfolio - {{ site.site_name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <div>
+            <div class="section-badge"><i class="fas fa-images"></i> Portfolio</div>
+            <h1 class="section-title">Our Projects</h1>
+        </div>
+        {% if user.is_staff %}
+        <a href="{% url 'portfolio_create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> New Project</a>
+        {% endif %}
+    </div>
+    {% if user.is_staff %}
+    <div class="search-bar">
+        <form method="get" class="search-form">
+            <input type="text" name="q" placeholder="Search projects..." value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+        </form>
+    </div>
+    {% if categories %}
+    <div class="filters">
+        <a href="{% url 'portfolio_list' %}" class="filter-btn {% if not request.GET.category %}active{% endif %}">All</a>
+        {% for cat in categories %}
+        <a href="?category={{ cat.slug }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="filter-btn {% if request.GET.category == cat.slug %}active{% endif %}">{{ cat.name }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endif %}
+    <div class="grid">
+        {% for item in items %}
+        <a href="{% url 'portfolio_detail' item.slug %}" class="card card-portfolio clickable-card fade-in-up">
+            <div class="card-image">
+                {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                {% endif %}
+                <div class="card-overlay">
+                    <span class="overlay-text"><i class="fas fa-eye"></i> View Project</span>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if item.category %}
+                <span class="badge"><i class="fas fa-tag"></i> {{ item.category.name }}</span>
+                {% endif %}
+                <h3>{{ item.title }}</h3>
+                {% if item.description %}
+                <p class="excerpt">{{ item.description|truncatewords:12 }}</p>
+                {% endif %}
+                <div class="card-meta">
+                    <span><i class="fas fa-eye"></i> {{ item.views }}</span>
+                    {% if item.shares %}
+                    <span><i class="fas fa-share"></i> {{ item.shares }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-hammer"></i></div>
+            <h3>No projects found</h3>
+            <p>Amazing work is coming soon!</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% include 'blog/pagination.html' with page_obj=items %}
+</section>
+{% endblock %}

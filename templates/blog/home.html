@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ site.site_name }}{% endblock %}
+
+{% block content %}
+<section class="hero hero-home">
+    <div class="hero-particles">
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+        <div class="particle particle-4"></div>
+        <div class="particle particle-5"></div>
+    </div>
+    <div class="hero-content fade-in-up">
+        {% if site.tagline %}
+        <div class="hero-cta-badge">{{ site.tagline }}</div>
+        {% else %}
+        <div class="hero-cta-badge">Professional Services You Can Trust</div>
+        {% endif %}
+        <h1>Quality <span class="text-gradient">Expert Services</span></h1>
+        <p>{{ site.hero_subtext|default:"From plumbing to electrical work, teaching to construction showcasing skilled professionals and their outstanding work" }}</p>
+        <div class="hero-buttons">
+            <a href="#lead-section" class="btn btn-primary btn-lg"><i class="fas fa-paper-plane"></i> Get Free Quote <span class="arrow">→</span></a>
+            <a href="{% url 'portfolio_list' %}" class="btn btn-outline btn-lg"><i class="fas fa-images"></i> View Our Work</a>
+        </div>
+    </div>
+</section>
+
+<section class="trust-bar fade-in">
+    <div class="trust-item"><i class="fas fa-star"></i> <span>Trusted Professionals</span></div>
+    <div class="trust-item"><i class="fas fa-clock"></i> <span>Fast Response</span></div>
+    <div class="trust-item"><i class="fas fa-shield-alt"></i> <span>Guaranteed Quality</span></div>
+    <div class="trust-item"><i class="fas fa-hand-holding-usd"></i> <span>Free Estimates</span></div>
+</section>
+
+{% if profile %}
+<section class="about-section wow-about fade-in">
+    <div class="about-glow-bg"></div>
+    <div class="about-content">
+        <div class="about-left">
+            {% if profile.avatar %}
+            <div class="about-avatar-wrap">
+                <img src="{{ profile.avatar.url }}" alt="Profile" class="about-avatar">
+                <div class="avatar-glow"></div>
+            </div>
+            {% endif %}
+            {% if profile.bio %}
+            <div class="about-bio">
+                <h3>About Us</h3>
+                <p>{{ profile.bio|linebreaks }}</p>
+            </div>
+            {% endif %}
+        </div>
+        <div class="about-right">
+            <div class="contact-cards">
+                {% if profile.cta %}
+                <div class="contact-card cta-card">
+                    <div class="contact-card-icon"><i class="fas fa-lightbulb"></i></div>
+                    <div class="contact-card-content">
+                        <span class="contact-card-label">Why Choose Us</span>
+                        <span class="contact-card-value">{{ profile.cta }}</span>
+                    </div>
+                </div>
+                {% endif %}
+                {% if profile.phone %}
+                <a href="tel:{{ profile.phone }}" class="contact-card phone-card">
+                    <div class="contact-card-icon"><i class="fas fa-phone"></i></div>
+                    <div class="contact-card-content">
+                        <span class="contact-card-label">Call Us Now</span>
+                        <span class="contact-card-value">{{ profile.phone }}</span>
+                    </div>
+                    <span class="contact-card-arrow"><i class="fas fa-arrow-right"></i></span>
+                </a>
+                {% endif %}
+                {% if profile.email %}
+                <a href="mailto:{{ profile.email }}" class="contact-card email-card">
+                    <div class="contact-card-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="contact-card-content">
+                        <span class="contact-card-label">Email Us</span>
+                        <span class="contact-card-value">{{ profile.email }}</span>
+                    </div>
+                    <span class="contact-card-arrow"><i class="fas fa-arrow-right"></i></span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section id="lead-section" class="lead-section fade-in">
+    <div class="lead-container">
+        <div class="lead-header">
+            <div class="lead-badge"><i class="fas fa-bolt"></i> Fast Response</div>
+            <h2>Get a <span class="text-gradient">Free Quote</span></h2>
+            <p>{{ site.lead_contact_info|default:"We respond within 24 hours. Fast, reliable service guaranteed." }}</p>
+        </div>
+        <form method="post" action="{% url 'lead_submit' %}" class="lead-form" id="leadForm">
+            {% csrf_token %}
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="{{ lead_form.name.id_for_label }}"><i class="fas fa-user"></i> Your Name</label>
+                    {{ lead_form.name }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ lead_form.email.id_for_label }}"><i class="fas fa-envelope"></i> Email</label>
+                    {{ lead_form.email }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ lead_form.phone.id_for_label }}"><i class="fas fa-phone"></i> Phone</label>
+                    {{ lead_form.phone }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ lead_form.service.id_for_label }}"><i class="fas fa-tools"></i> Service</label>
+                    {{ lead_form.service }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="{{ lead_form.message.id_for_label }}"><i class="fas fa-comment"></i> Tell us about your project</label>
+                {{ lead_form.message }}
+            </div>
+            <button type="submit" class="btn btn-primary btn-full btn-lg"><i class="fas fa-paper-plane"></i> Request Free Quote</button>
+        </form>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-header">
+        <div>
+            <div class="section-badge"><i class="fas fa-images"></i> Portfolio</div>
+            <h2 class="section-title">Featured Projects</h2>
+        </div>
+        <a href="{% url 'portfolio_list' %}" class="btn btn-outline">View All <span class="arrow">→</span></a>
+    </div>
+    <div class="grid">
+        {% for item in portfolio %}
+        <a href="{% url 'portfolio_detail' item.slug %}" class="card card-portfolio clickable-card fade-in-up">
+            <div class="card-image">
+                {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                {% endif %}
+                <div class="card-overlay">
+                    <span class="overlay-text"><i class="fas fa-eye"></i> View Project</span>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if item.category %}
+                <span class="badge"><i class="fas fa-tag"></i> {{ item.category.name }}</span>
+                {% endif %}
+                <h3>{{ item.title }}</h3>
+                <div class="card-meta">
+                    <span><i class="fas fa-eye"></i> {{ item.views }}</span>
+                    {% if item.shares %}
+                    <span><i class="fas fa-share"></i> {{ item.shares }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-hammer"></i></div>
+            <h3>No projects yet</h3>
+            <p>Amazing work is coming soon!</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section newsletter-section fade-in">
+    <div class="newsletter-container">
+        <div class="newsletter-icon"><i class="fas fa-bell"></i></div>
+        <h2>Stay Updated</h2>
+        <p>Get notified when we publish new tips, projects, and special offers.</p>
+        <form method="post" action="{% url 'newsletter_subscribe' %}" class="newsletter-form" id="newsletterForm">
+            {% csrf_token %}
+            <div class="newsletter-input-group">
+                {{ newsletter_form.email }}
+                <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Subscribe</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-header">
+        <div>
+            <div class="section-badge"><i class="fas fa-newspaper"></i> Blog</div>
+            <h2 class="section-title">Latest Updates</h2>
+        </div>
+        <a href="{% url 'blog_list' %}" class="btn btn-outline">View All <span class="arrow">→</span></a>
+    </div>
+    <div class="grid">
+        {% for post in posts %}
+        <a href="{% url 'blog_detail' post.slug %}" class="card card-blog clickable-card fade-in-up">
+            <div class="card-image">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                {% endif %}
+                {% if post.video_url %}
+                <div class="video-badge"><i class="fas fa-play-circle"></i></div>
+                {% endif %}
+                <div class="card-overlay">
+                    <span class="overlay-text"><i class="fas fa-book-open"></i> Read More</span>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if post.category %}
+                <span class="badge"><i class="fas fa-tag"></i> {{ post.category.name }}</span>
+                {% endif %}
+                <h3>{{ post.title }}</h3>
+                <p class="date"><i class="fas fa-calendar"></i> {{ post.created_at|date:"M d, Y" }}</p>
+                <p class="excerpt">{{ post.content|truncatewords:12 }}</p>
+                <div class="card-meta">
+                    <span><i class="fas fa-eye"></i> {{ post.views }}</span>
+                    <span><i class="fas fa-heart"></i> {{ post.total_likes }}</span>
+                    {% if post.shares %}
+                    <span><i class="fas fa-share"></i> {{ post.shares }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-pencil-alt"></i></div>
+            <h3>No posts yet</h3>
+            <p>Stay tuned for tips and insights!</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('leadForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {'X-Requested-With': 'XMLHttpRequest'}
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            this.innerHTML = '<div class="success-message"><i class="fas fa-check-circle"></i> Thank you! We will contact you within 24 hours.</div>';
+        } else {
+            alert('Please fill in all required fields.');
+        }
+    });
+});
+document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {'X-Requested-With': 'XMLHttpRequest'}
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            this.innerHTML = '<div class="success-message"><i class="fas fa-check-circle"></i> Subscribed successfully!</div>';
+        } else {
+            alert('Please enter a valid email.');
+        }
+    });
+});
+gsap.from('.trust-item', { opacity: 0, y: 20, stagger: 0.15, duration: 0.5, delay: 0.5 });
+</script>
+{% endblock %}

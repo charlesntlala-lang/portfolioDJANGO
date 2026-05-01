@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}Site Settings{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <div>
+            <div class="section-badge">Admin</div>
+            <h1 class="section-title">Site Settings</h1>
+        </div>
+    </div>
+
+    <div class="settings-container fade-in">
+        <form method="post" enctype="multipart/form-data" class="settings-form">
+            {% csrf_token %}
+
+            <div class="settings-section">
+                <h2 class="settings-section-title">General</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.site_name.id_for_label }}">Site Name</label>
+                        {{ form.site_name }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.tagline.id_for_label }}">Tagline</label>
+                        {{ form.tagline }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.hero_subtext.id_for_label }}">Hero Subtext</label>
+                    {{ form.hero_subtext }}
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.logo.id_for_label }}">Logo</label>
+                        {{ form.logo }}
+                        {% if form.instance.logo %}
+                        <img src="{{ form.instance.logo.url }}" alt="Current logo" class="preview-img">
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.favicon.id_for_label }}">Favicon</label>
+                        {{ form.favicon }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h2 class="settings-section-title">Theme</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.default_theme.id_for_label }}">Default Theme</label>
+                        {{ form.default_theme }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.text_color.id_for_label }}">Text Color</label>
+                        {{ form.text_color }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h2 class="settings-section-title">Colors</h2>
+                <div class="color-grid">
+                    <div class="form-group color-group">
+                        <label for="{{ form.primary_color.id_for_label }}">Primary</label>
+                        {{ form.primary_color }}
+                    </div>
+                    <div class="form-group color-group">
+                        <label for="{{ form.primary_dark.id_for_label }}">Primary Dark</label>
+                        {{ form.primary_dark }}
+                    </div>
+                    <div class="form-group color-group">
+                        <label for="{{ form.secondary_color.id_for_label }}">Secondary</label>
+                        {{ form.secondary_color }}
+                    </div>
+                    <div class="form-group color-group">
+                        <label for="{{ form.dark_color.id_for_label }}">Dark</label>
+                        {{ form.dark_color }}
+                    </div>
+                    <div class="form-group color-group">
+                        <label for="{{ form.light_color.id_for_label }}">Light</label>
+                        {{ form.light_color }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h2 class="settings-section-title">Navigation</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.navbar_position.id_for_label }}">Navbar Position</label>
+                        {{ form.navbar_position }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.navbar_width.id_for_label }}">Navbar Width</label>
+                        {{ form.navbar_width }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.border_radius.id_for_label }}">Border Radius Style</label>
+                    {{ form.border_radius }}
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h2 class="settings-section-title">Footer</h2>
+                <div class="form-group">
+                    <label for="{{ form.footer_content.id_for_label }}">Footer Content</label>
+                    {{ form.footer_content }}
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.footer_links.id_for_label }}">Footer Links (JSON)</label>
+                        {{ form.footer_links }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.social_links.id_for_label }}">Social Links (JSON)</label>
+                        {{ form.social_links }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-lg">Save Settings</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

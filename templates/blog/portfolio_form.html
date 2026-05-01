@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Portfolio Item{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-header">
+        <div>
+            <div class="section-badge">Portfolio</div>
+            <h1 class="section-title">{{ action }} Portfolio Item</h1>
+        </div>
+    </div>
+    <div class="form-card fade-in">
+        <form method="post" enctype="multipart/form-data" class="form">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <div class="errors">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <div class="form-group">
+                <label for="additional_images"><i class="fas fa-images"></i> Additional Images</label>
+                <input type="file" name="additional_images" id="additional_images" multiple accept="image/*">
+                <small class="help-text">Upload multiple images to showcase your project</small>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ action }} Project</button>
+                <a href="javascript:history.back()" class="btn btn-outline"><i class="fas fa-times"></i> Cancel</a>
+            </div>
+        </form>
+    </div>
+    {% if gallery_images %}
+    <div class="gallery-manage fade-in">
+        <h3><i class="fas fa-images"></i> Current Gallery Images</h3>
+        <div class="gallery-grid">
+            {% for img in gallery_images %}
+            <div class="gallery-item">
+                <img src="{{ img.image.url }}" alt="{{ img.caption }}">
+                {% if img.caption %}
+                <div class="gallery-caption">{{ img.caption }}</div>
+                {% endif %}
+                <form method="post" action="{% url 'portfolio_image_delete' img.pk %}" class="gallery-delete">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
